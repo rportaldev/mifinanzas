@@ -22,14 +22,15 @@ public class MovimientoRequestDTO {
 	@NotNull(message = "El Tipo de movimiento es obligatorio")
 	private TipoMovimiento tipo;
 	
+	@NotNull(message = "El monto es obligatorio")
 	@DecimalMin(value = "0.01", 
-				message = "El precio debe ser un número mayor a cero")
+				message = "El monto debe ser un número mayor a cero")
 	private BigDecimal monto;
 	
 	@NotNull(message = "La fecha del movimiento es obligatoria")
 	private LocalDate fecha;
 	
-	@NotBlank(message = "La descripcion es obligatoria")
+	@NotBlank(message = "La descripción es obligatoria")
 	private String descripcion;
 	
 	@NotNull(message = "La categoria es obligatoria")

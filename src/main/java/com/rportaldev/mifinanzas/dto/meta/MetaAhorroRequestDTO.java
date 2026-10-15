@@ -21,6 +21,7 @@ public class MetaAhorroRequestDTO {
 	@NotBlank(message = "El nombre es obligatorio")
 	private String nombre;
 	
+	@NotNull(message = "El monto objetivo es obligatorio")
 	@DecimalMin(value = "0.01", 
 			message = "El monto del objetivo debe ser un número mayor a cero")
 	private BigDecimal montoObjetivo;

@@ -17,6 +17,7 @@ import lombok.Setter;
 
 public class AporteAhorroRequestDTO {
 
+	@NotNull(message = "El monto del aporte es obligatorio")
 	@DecimalMin(value = "0.01", 
 			message = "El monto del aporte debe ser un número mayor a cero")
 	private BigDecimal monto;
