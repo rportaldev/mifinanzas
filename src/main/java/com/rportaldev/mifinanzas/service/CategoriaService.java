@@ -11,6 +11,7 @@ import com.rportaldev.mifinanzas.entity.Usuario;
 import com.rportaldev.mifinanzas.exception.CategoriaInvalidaException;
 import com.rportaldev.mifinanzas.exception.RecursoNoEncontradoException;
 import com.rportaldev.mifinanzas.repository.CategoriaRepository;
+import com.rportaldev.mifinanzas.repository.MovimientoRepository;
 import com.rportaldev.mifinanzas.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class CategoriaService {
 
 	private final CategoriaRepository categoriaRepository;
 	private final UsuarioRepository usuarioRepository;
+	private final MovimientoRepository movimientoRepository;
 	
 	public CategoriaResponseDTO crearCategoria(String correoUsuario, CategoriaRequestDTO dto) {
 		
@@ -81,6 +83,13 @@ public class CategoriaService {
 		Categoria categoria = categoriaRepository.findByIdAndUsuarioId(id, usuario.getId())
 				.orElseThrow(() -> new RecursoNoEncontradoException(
 						"Categoria no encontrada con ID: " + id));
+		
+		if (movimientoRepository.existsByCategoriaId(categoria.getId())) {
+			throw new CategoriaInvalidaException(
+					"No se puede eliminar la categoria '" + categoria.getNombre()
+					+ "' porque tiene movimientos asociados. "
+					+ "Elimina o reasigna esos movimientos primero.");
+		}
 		
 		categoriaRepository.delete(categoria);
 	}
