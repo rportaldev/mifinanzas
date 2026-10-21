@@ -18,6 +18,7 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
 	Page<Movimiento> findByUsuarioId(Long usuarioId, Pageable pageable);
 	Page<Movimiento> findByUsuarioIdAndTipo(Long usuarioId, TipoMovimiento tipo, Pageable pageable);
 	Optional<Movimiento> findByIdAndUsuarioId(Long id, Long usuarioId);
+	boolean existsByCategoriaId(Long categoriaId);
 	
 	@Query("SELECT COALESCE(SUM(m.monto), 0) FROM Movimiento m " +
 		       "WHERE m.usuario.id = :usuarioId AND m.tipo = :tipo " +
