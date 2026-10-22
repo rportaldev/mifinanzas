@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,13 +21,14 @@ public class MetaAhorroRequestDTO {
 
 	@NotBlank(message = "El nombre es obligatorio")
 	private String nombre;
-	
-	@NotNull(message = "El monto objetivo es obligatorio")
-	@DecimalMin(value = "0.01", 
+
+	@NotNull(message = "El monto del objetivo es obligatorio")
+	@DecimalMin(value = "0.01",
 			message = "El monto del objetivo debe ser un número mayor a cero")
 	private BigDecimal montoObjetivo;
-	
+
 	@NotNull(message = "La fecha del objetivo es obligatoria")
+	@Future(message = "La fecha del objetivo debe ser posterior a hoy")
 	private LocalDate fechaObjetivo;
 	
 }

@@ -18,11 +18,9 @@ public class MetaAhorroResponseDTO {
 
 	private Long id;
 	private String nombre;
-	private BigDecimal nontoObjetivo;
+	private BigDecimal montoObjetivo;
 	private LocalDate fechaObjetivo;
 	private EstadoMeta estado;
 	private BigDecimal montoAhorrado;
 	private BigDecimal montoFaltante;
-	private BigDecimal porcentajeProgreso;
-	private BigDecimal ahorroMensualRecomendado;
 }

@@ -11,6 +11,7 @@ import com.rportaldev.mifinanzas.entity.AporteAhorro;
 public interface AporteAhorroRepository extends JpaRepository<AporteAhorro, Long>{
 
 	List<AporteAhorro> findByMetaAhorroId(Long metaAhorroId);
+	boolean existsByMetaAhorroId(Long metaAhorroId);
 	
 	@Query("SELECT COALESCE(SUM(a.monto), 0) "
 			+ "FROM AporteAhorro a WHERE a.metaAhorro.id = :metaAhorroId")
