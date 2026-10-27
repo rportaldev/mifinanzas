@@ -1,7 +1,10 @@
 package com.rportaldev.mifinanzas.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -65,13 +68,19 @@ public class MovimientoController {
 	
 	@GetMapping
 	public ResponseEntity<Page<MovimientoResponseDTO>> listarMovimientos(
-				@RequestParam(required = false) TipoMovimiento tipo, Pageable pageable,
-				Authentication authentication) {
+			@RequestParam(required = false) TipoMovimiento tipo,
+			@RequestParam(required = false) Long categoriaId,
+			@RequestParam(required = false)
+				@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+			@RequestParam(required = false)
+				@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta,
+			Pageable pageable,
+			Authentication authentication) {
 
 		String correo = authentication.getName();
-		Page<MovimientoResponseDTO> movimientos = movimientoService.listarMovimientos(correo, tipo, pageable);
+		Page<MovimientoResponseDTO> movimientos = movimientoService
+				.listarMovimientos(correo, tipo, categoriaId, desde, hasta, pageable);
 
 		return ResponseEntity.ok(movimientos);
 	}
-	
 }

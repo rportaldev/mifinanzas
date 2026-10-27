@@ -1,9 +1,14 @@
 package com.rportaldev.mifinanzas.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.rportaldev.mifinanzas.dto.movimiento.MovimientoRequestDTO;
@@ -105,6 +110,43 @@ public class MovimientoService {
 		}
 
 		return movimientos.map(this::convertirADTO);
+	}
+	
+	
+	public Page<MovimientoResponseDTO> listarMovimientos(String correoUsuario,
+			TipoMovimiento tipo, Long categoriaId,
+			LocalDate desde, LocalDate hasta, Pageable pageable) {
+
+		Usuario usuario = obtenerUsuario(correoUsuario);
+
+		if (desde != null && hasta != null && desde.isAfter(hasta)) {
+			throw new MontoInvalidoException(
+					"La fecha 'desde' no puede ser posterior a 'hasta'");
+		}
+
+		Specification<Movimiento> filtros = (root, query, cb) -> {
+
+			List<Predicate> condiciones = new ArrayList<>();
+
+			condiciones.add(cb.equal(root.get("usuario").get("id"), usuario.getId()));
+
+			if (tipo != null) {
+				condiciones.add(cb.equal(root.get("tipo"), tipo));
+			}
+			if (categoriaId != null) {
+				condiciones.add(cb.equal(root.get("categoria").get("id"), categoriaId));
+			}
+			if (desde != null) {
+				condiciones.add(cb.greaterThanOrEqualTo(root.get("fecha"), desde));
+			}
+			if (hasta != null) {
+				condiciones.add(cb.lessThanOrEqualTo(root.get("fecha"), hasta));
+			}
+
+			return cb.and(condiciones.toArray(new Predicate[0]));
+		};
+
+		return movimientoRepository.findAll(filtros, pageable).map(this::convertirADTO);
 	}
 	
 	private void validarMovimiento(MovimientoRequestDTO dto, Categoria categoria) {

@@ -8,13 +8,15 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.rportaldev.mifinanzas.entity.Movimiento;
 import com.rportaldev.mifinanzas.enums.TipoMovimiento;
 
-public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
+public interface MovimientoRepository extends JpaRepository<Movimiento, Long>,
+JpaSpecificationExecutor<Movimiento>{
 
 	Page<Movimiento> findByUsuarioId(Long usuarioId, Pageable pageable);
 	Page<Movimiento> findByUsuarioIdAndTipo(Long usuarioId, TipoMovimiento tipo, Pageable pageable);
