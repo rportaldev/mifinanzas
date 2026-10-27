@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.rportaldev.mifinanzas.entity.Movimiento;
 import com.rportaldev.mifinanzas.enums.TipoMovimiento;
@@ -20,14 +21,20 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
 	Optional<Movimiento> findByIdAndUsuarioId(Long id, Long usuarioId);
 	boolean existsByCategoriaId(Long categoriaId);
 	
-	@Query("SELECT COALESCE(SUM(m.monto), 0) FROM Movimiento m " +
-		       "WHERE m.usuario.id = :usuarioId AND m.tipo = :tipo " +
-		       "AND m.fecha BETWEEN :desde AND :hasta")
-	BigDecimal sumarMontoPorUsuarioYTipo(Long usuarioId, TipoMovimiento tipo, LocalDate desde, LocalDate hasta);
-	
-	@Query("SELECT c.nombre, SUM(m.monto) FROM Movimiento m " +
-		       "JOIN m.categoria c " +
-		       "WHERE m.usuario.id = :usuarioId AND m.tipo = 'GASTO' " +
-		       "GROUP BY c.nombre")
-	List<Object[]> sumarGastosPorCategoria(Long usuarioId);
+	@Query("SELECT COALESCE(SUM(m.monto), 0) FROM Movimiento m "
+			+ "WHERE m.usuario.id = :usuarioId AND m.tipo = :tipo "
+			+ "AND m.fecha BETWEEN :desde AND :hasta")
+	BigDecimal sumarMontoPorUsuarioYTipo(@Param("usuarioId") Long usuarioId,
+			@Param("tipo") TipoMovimiento tipo,
+			@Param("desde") LocalDate desde,
+			@Param("hasta") LocalDate hasta);
+
+	@Query("SELECT c.nombre, SUM(m.monto) FROM Movimiento m JOIN m.categoria c "
+			+ "WHERE m.usuario.id = :usuarioId AND m.tipo = :tipo "
+			+ "AND m.fecha BETWEEN :desde AND :hasta "
+			+ "GROUP BY c.nombre")
+	List<Object[]> sumarGastosPorCategoria(@Param("usuarioId") Long usuarioId,
+			@Param("tipo") TipoMovimiento tipo,
+			@Param("desde") LocalDate desde,
+			@Param("hasta") LocalDate hasta);
 }
